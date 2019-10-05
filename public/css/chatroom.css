@@ -1,0 +1,115 @@
+*{
+  padding: 0px;
+  margin:  0px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+body{
+  background-color: #DCDCDC;
+}
+
+.footer{
+  display: block;
+  width: 100%;
+  height: 3.3em;
+  position: absolute;
+  bottom: 0;
+  background-color: white;
+}
+
+.messagebox-wrapper{
+  border: 1px 0 0 0 solid #808080;
+  background-color: #F5F5F5;
+  width: 100%;
+  height: 10em;
+  position: absolute;
+  bottom: 3.3em;
+}
+
+#messagebox{
+  width: 100%;
+  resize: none;
+  border: none;
+  height: 100%;
+  font-size: 1.5em;
+  padding: 1em 1em .2em 1em; 
+}
+
+#submit{
+  background-color: #F5F5F5;
+  color: black;
+  padding: .5em 1em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: .3em;
+  border: 1px solid black;
+  font-size: 1em;
+  position: absolute;
+  right: 1em;
+  bottom: 1em;
+}
+
+#submit:hover{
+  background-color: #DCDCDC;
+}
+
+
+/* bubble style */
+
+.sender{
+  clear:both;
+}
+.sender div:nth-of-type(1){
+  float: left;
+}
+.sender div:nth-of-type(2){
+  background-color: aquamarine;
+  float: left;
+  margin: 0 20px 10px 15px;
+  padding: 10px 10px 10px 0px;
+  border-radius:7px;
+}
+
+.receiver div:first-child img,
+.sender div:first-child img{
+  width:50px;
+  height: 50px;
+}
+
+.receiver{
+  clear:both;
+}
+.receiver div:nth-child(1){
+  float: right;
+}
+.receiver div:nth-of-type(2){
+  float:right;
+  background-color: gold;
+  margin: 0 10px 10px 20px;
+  padding: 10px 0px 10px 10px;
+  border-radius:7px;
+}
+
+.left_triangle{
+  height:0px;  
+  width:0px;  
+  border-width:8px;  
+  border-style:solid;  
+  border-color:transparent aquamarine transparent transparent;  
+  position: relative;
+  left:-16px;
+  top:3px;
+}
+
+.right_triangle{
+  height:0px;  
+  width:0px;  
+  border-width:8px;  
+  border-style:solid;  
+  border-color:transparent transparent transparent gold;  
+  position: relative;
+  right:-16px;
+  top:3px;
+}

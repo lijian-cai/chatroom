@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/chatroom.css">
+  <title>Chatroom</title>
+</head>
+<body>
+  <!-- Left -->
+  <div class="receiver">
+    <div>
+      <img src="chatTemplateExample2_files/cat.jpg">
+    </div>
+    <div>
+      <div class="right_triangle"></div>
+      <span> hello world </span>
+    </div>
+  </div>
+  
+  <!-- Right -->
+  <div class="sender">
+    <div>
+      <img src="chatTemplateExample2_files/cat.jpg">
+    </div>
+  <div>
+    <div class="left_triangle"></div>
+      <span> hello, man! </span>
+    </div>
+  </div>
+
+  <form action="">
+    <div class="messagebox-wrapper">
+      <textarea type="text" name="" id="messagebox"></textarea>
+    </div>
+    <div class="footer">
+      <button type="submit" id="submit">Send</button>
+    </div>
+  </form>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    $(function () {
+      var socket = io();
+      $('form').submit(function(e){
+        e.preventDefault(); // prevents page reloading
+        socket.emit('chat message', $('#messagebox').val());
+        $('#messagebox').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+    });
+  </script>
+</body>
+</html>
