@@ -8,49 +8,69 @@
   <title>Chatroom</title>
 </head>
 <body>
-  <!-- Left -->
-  <div class="receiver">
-    <div>
-      <img src="chatTemplateExample2_files/cat.jpg">
-    </div>
-    <div>
-      <div class="right_triangle"></div>
-      <span> hello world </span>
-    </div>
-  </div>
-  
-  <!-- Right -->
-  <div class="sender">
-    <div>
-      <img src="chatTemplateExample2_files/cat.jpg">
-    </div>
-  <div>
-    <div class="left_triangle"></div>
-      <span> hello, man! </span>
-    </div>
-  </div>
+  <div class="container">
+    <div class="chat-container">
 
-  <form action="">
-    <div class="messagebox-wrapper">
-      <textarea type="text" name="" id="messagebox"></textarea>
     </div>
-    <div class="footer">
-      <button type="submit" id="submit">Send</button>
+    <div class="messagebox-container">
+      <form action="">
+        <div class="messagebox-wrapper">
+          <textarea type="text" name="messagebox" id="messagebox"></textarea>
+        </div>
+        <div class="footer">
+          <button type="submit" id="submit">Send</button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
   <script src="/js/jquery.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     $(function () {
       var socket = io();
+      var username = `<%= name %>`;
       $('form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        socket.emit('chat message', $('#messagebox').val());
+        socket.emit('chat message', username, $('#messagebox').val());
         $('#messagebox').val('');
         return false;
       });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+      // $('#messagebox').keypress(e => {
+      //   if(e.which == 13){
+      //     $('#submit').focus().click();
+      //   }
+      // });
+      let chatContainer = $('.chat-container');
+      socket.on('chat message', function(sendername, msg){
+        if(sendername == username){
+          chatContainer.append(
+             // right
+             `<div class="sender">
+                <div>
+                  <img src="chatTemplateExample2_files/cat.jpg">
+                </div>
+                <div>
+                  <div class="left_triangle"></div>
+                  <pre>${msg}</pre>
+                </div>
+              </div>`.trim()
+          )
+        }else{
+          chatContainer.append(
+            // left
+             `<div class="receiver">
+                <div>
+                  <img src="chatTemplateExample2_files/cat.jpg">
+                </div>
+                <div>
+                  <div class="right_triangle"></div>
+                  <pre>${msg}</pre>
+                </div>
+              </div>`.trim()
+          )
+        }
+        /* auto scroll to bottom */
+        chatContainer.scrollTop(chatContainer[0].scrollHeight)
       });
     });
   </script>

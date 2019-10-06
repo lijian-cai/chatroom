@@ -19,10 +19,8 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }))
 
 io.on('connection', (socket) => {
-  console.log(`a user connected, id: ${socket.id}`)
-  socket.on('chat message', (msg) => {
-    console.log('message: ' + msg);
-    io.emit('chat message', msg);
+  socket.on('chat message', (username, msg) => {
+    io.emit('chat message', username, msg);
   });
 });
 
@@ -43,7 +41,6 @@ app.post('/', (req, res) => {
 app.get('/chatroom', (req, res) => {
   if(req.session.name){
     let name = req.session.name
-    console.log(socket.id)
     res.render('chatroom', {'name': name})
   }else{
     res.redirect('/')
