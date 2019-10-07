@@ -12,10 +12,14 @@
     <form action="/" method="post">
       <h1>What shall we call you?</h1>
       <div class="div-space"></div>
-      <input type="text" name="name" id="name" placeholder="your nickname..." required>
+      <input type="text" name="name" id="name" maxlength="8" placeholder="your nickname, maximum length: 8..." required>
       <div class="div-space"></div>
       <button type="submit" id="submit">let's chat</button>
     </form>
   </div>
+  <script>
+    const scale = window.screen.width / 750
+    document.write(`<meta name="viewport" content="initial-scale=${scale}">`)
+  </script>
 </body>
 </html>

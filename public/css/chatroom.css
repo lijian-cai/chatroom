@@ -6,89 +6,164 @@
 }
 
 html, body{
-  background-color: #DCDCDC;
   font-family: "Lucida Grande";
   font-weight: 400;
   color: #333333;
   height: 100%;
   width: 100%;
+  display: block;
+}
+
+div{
+  display: block;
+}
+
+img { 
+  width: auto; 
+  max-width: 100%; 
 }
 
 .container{
   height: 100%;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  display: -webkit-flex; /* Safari */
+  align-items: center;
+  justify-content: center;
+  background-image: url('../images/background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  position: fixed;
 }
 
-/* messages */
+.wechat-container{
+  height: 680px;
+  width: 860px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0,0,0,.1);
+}
+
+.side-nav{
+  width: 10%;
+  background-color: #2A2E32;
+  height: 100%;
+  padding-top: 20px;
+  border-radius: 4px 0 0 4px;
+  float: left;
+}
+
+.avatar{
+  border-radius: 2px;
+  position: relative;
+  display: inline-block;
+}
+
+.own-avatar{
+  width: 40px;
+  height: 40px;
+  background-size: 40px;
+  background: url('../images/tony2.png');
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.user-search{
+  height: 62px;
+  line-height: 62px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#search{
+  width: 190px;
+  height: 25px;
+  background-color: #E5E2E2;
+  border: 1px solid #D9D7D6;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user-list{
+  width: 30%;
+  height: 100%;
+  float: left;
+  background-color: #E6E5E5;
+  overflow: hidden;
+  display: block;
+}
 
 .chat-container{
+  width: 60%;
+  height: 100%;
+  float: left;
+  background-color: #F5F5F5;
+}
+
+.chat-head{
+  padding-top: 10px;
+  height: 62px;
+  border-bottom: 1px solid #E7E7E7;
+}
+
+.chat-head span{
+  font-size: 18px;
+  color: #333333;
+  line-height:42px;
+  padding-left: 30px;
+  display: inline-block;
+}
+
+.chat-body{
+  height: 473px;
+  width: 100%;
+  padding: 18px 18px 0 18px;
   width: 100%;
   overflow: scroll;
-  flex: 1;
 }
 
-/* message box */
-
-.messagebox-container{
-  display: flex;
-  height: 13.3em;
-}
-
-form{
-  height: 13.3em;
-}
-
-.messagebox-wrapper{
-  display: block;
-  border: 1px 0 0 0 solid #808080;
-  background-color: #F5F5F5;
+.chat-footer{
   width: 100%;
-  height: 10em;
-  position: absolute;
-  bottom: 3.3em;
+  height: 145px;
+  border-top: 1px solid #ECECEC;
 }
 
 #messagebox{
   width: 100%;
   resize: none;
   border: none;
-  height: 100%;
-  font-size: 1.5em;
-  padding: 1em 1em .2em 1em; 
+  padding: 16px 16px 3.2px 16px;
+  height: 80px;
+  background-color: #F5F5F5;
+}
+
+.chat-footer:hover,
+.chat-footer:hover #messagebox{
+  background-color: white;    
 }
 
 /* submit button */
 
-.footer{
-  display: block;
-  width: 100%;
-  height: 3.3em;
-  /* height: 15%; */
-  position: absolute;
-  bottom: 0;
-  background-color: white;
-}
-
 #submit{
   background-color: #F5F5F5;
   color: black;
-  padding: .5em 1em;
+  padding: 8px 16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  border-radius: .3em;
+  border-radius: 4.8px;
   border: 1px solid black;
-  font-size: 1em;
-  position: absolute;
-  right: 1em;
-  bottom: 1em;
+  float: right;
+  margin-right: 28px;
+  margin-top: 18px;
 }
 
 #submit:hover{
   background-color: #DCDCDC;
 }
-
 
 /* bubble style */
 

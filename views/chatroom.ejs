@@ -9,18 +9,30 @@
 </head>
 <body>
   <div class="container">
-    <div class="chat-container">
+    <div class="wechat-container">
+      <div class="side-nav">
+        <div class="own-avatar avatar"></div>
+      </div>
+      <div class="user-list">
+        <div class="user-search">
+          <input type="text" name="search" id="search" placeholder="Search Member..." autocomplete="off">
+        </div>
+      </div>
+      
+      <div class="chat-container">
+        <div class="chat-head">
+          <span>All Members</span>
+        </div>
+        <div class="chat-body">
 
-    </div>
-    <div class="messagebox-container">
-      <form action="">
-        <div class="messagebox-wrapper">
-          <textarea type="text" name="messagebox" id="messagebox"></textarea>
         </div>
-        <div class="footer">
-          <button type="submit" id="submit">Send</button>
+        <div class="chat-footer">
+          <form action="">
+            <textarea type="text" name="messagebox" id="messagebox"></textarea>
+            <button type="submit" id="submit">Send</button>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
   <script src="/js/jquery.min.js"></script>
@@ -40,10 +52,11 @@
       //     $('#submit').focus().click();
       //   }
       // });
-      let chatContainer = $('.chat-container');
+      let chatBody = $('.chat-body');
+      let messageBox = $('#messagebox');
       socket.on('chat message', function(sendername, msg){
         if(sendername == username){
-          chatContainer.append(
+          chatBody.append(
              // right
              `<div class="sender">
                 <div>
@@ -56,7 +69,7 @@
               </div>`.trim()
           )
         }else{
-          chatContainer.append(
+          chatBody.append(
             // left
              `<div class="receiver">
                 <div>
@@ -70,9 +83,14 @@
           )
         }
         /* auto scroll to bottom */
-        chatContainer.scrollTop(chatContainer[0].scrollHeight)
+        chatBody.scrollTop(chatBody[0].scrollHeight)
+        // messageBox.on('mouseover', function(){
+        //   $('.chat-footer').css("background-color", "white");
+        // })
       });
     });
+    const scale = window.screen.width / 750
+    document.write(`<meta name="viewport" content="initial-scale=${scale}">`)
   </script>
 </body>
 </html>
