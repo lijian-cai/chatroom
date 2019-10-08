@@ -6,6 +6,10 @@ const app     = express()
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
+const User = require('./models/user.js');
+
+let connectedUsers = [];
+
 // express帮你设置模板引擎
 app.set('view engine', 'ejs');
 // express-session
@@ -22,7 +26,12 @@ io.on('connection', (socket) => {
   socket.on('chat message', (username, msg) => {
     io.emit('chat message', username, msg);
   });
+  socket.on('initlist', () => {
+    io.emit('initlist', connectedUsers)
+  })
 });
+
+app.io = io;
 
 app.get('/', (req, res) => {
   res.render('index')
@@ -41,10 +50,21 @@ app.post('/', (req, res) => {
 app.get('/chatroom', (req, res) => {
   if(req.session.name){
     let name = req.session.name
-    res.render('chatroom', {'name': name})
+    let user = new User(name)
+    connectedUsers.push(user)
+    res.render('chatroom', {'user': user})
   }else{
     res.redirect('/')
   }
+})
+
+app.get('/search', (req, res) => {
+  let keyword = req.query.keyword
+  let results = []
+  /* 正则模糊查询 */
+  // var reg =  new RegExp(keyWord, 'i');
+  results = connectedUsers.filter((user) => user.name.match(keyword))
+  res.json({results: results})
 })
 
 // set static routes

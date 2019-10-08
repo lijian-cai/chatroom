@@ -17,13 +17,33 @@
         <div class="user-search">
           <input type="text" name="search" id="search" placeholder="Search Member..." autocomplete="off">
         </div>
+        <div class="members-list-container">
+          <ul class="members-list">
+            <li class="user-active" id="all-member">
+              <div class="user-head avatar">
+                <img src="../all_members.jpg" alt="">
+              </div>
+              <div class="user-text">
+                <p class="user-name">
+                  All Members
+                </p>
+                <p class="user-message">
+                  dfadsadfsdfadfasfsafsadfasfdasdfadafadsfddddddddaaaaa
+                </p>
+              </div>
+              <div class="message-time">
+                2:54pm
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
       
       <div class="chat-container">
         <div class="chat-head">
           <span>All Members</span>
         </div>
-        <div class="chat-body">
+        <div class="chat-body all-member">
 
         </div>
         <div class="chat-footer">
@@ -40,27 +60,93 @@
   <script>
     $(function () {
       var socket = io();
-      var username = `<%= name %>`;
+      var user = `<%= user %>`
+      var username = `<%= user.name %>`;
+      var chatBody = $('.all-member');
+      var messageBox = $('#messagebox');
+
+      var avatarPath = `../images/${username}.png`;
+      $('.own-avatar').css('background', 'url(' + avatarPath + ')');
+
+      $('#search').on('input', function(){
+        var keyword = $(this).val();
+        $.ajax({
+          method: 'GET',
+          url: '/search',
+          data: {keyword: keyword},
+          dataType: 'JSON',
+          error: function(err){
+            console.log('error on search: '+err)
+          },
+          success: function(users){
+            console.log(users)
+            $('.members-list').children().hide()
+            $('#all-member').show()
+            for(user of users.results){
+              $(`#${user.name}`).show()
+            }
+          }
+        })
+      })
+
       $('form').submit(function(e){
         e.preventDefault(); // prevents page reloading
         socket.emit('chat message', username, $('#messagebox').val());
         $('#messagebox').val('');
         return false;
       });
+      socket.emit('initlist')
+      socket.on('initlist', (connectedUsers) => {
+        for(user of connectedUsers){
+          if(user.name !== username){
+            $('.members-list').append(
+               `<li id='${user.name}'>
+                  <div class="user-head avatar">
+                    <img src="../images/${user.name}.png" alt="">
+                  </div>
+                  <div class="user-text">
+                    <p class="user-name">
+                      ${user.name}
+                    </p>
+                    <p class="user-message">
+                    </p>
+                  </div>
+                  <div class="message-time">
+                  </div>
+                </li>`.trim()
+            )
+            $('.all-member').after(
+              `<div class="chat-body ${user.name}" style="display: none;">
+
+              </div>`.trim()
+            )
+          }
+        }
+      })
+      $(".members-list").on( "click", "li", function() {
+        $('.user-active').removeClass('user-active')
+        $(this).addClass('user-active')
+        let name = $(this).attr('id')
+        $(`.${name}`).show()
+        let newChatBody = $(`.${name}`)
+        chatBody.hide()
+        chatBody = newChatBody
+        chatBody.show()
+        $('.chat-head span').text(name)
+      });
+
       // $('#messagebox').keypress(e => {
       //   if(e.which == 13){
       //     $('#submit').focus().click();
       //   }
       // });
-      let chatBody = $('.chat-body');
-      let messageBox = $('#messagebox');
       socket.on('chat message', function(sendername, msg){
         if(sendername == username){
           chatBody.append(
              // right
              `<div class="sender">
                 <div>
-                  <img src="chatTemplateExample2_files/cat.jpg">
+                  <img src="../images/${sendername}.png">
                 </div>
                 <div>
                   <div class="left_triangle"></div>
@@ -73,7 +159,7 @@
             // left
              `<div class="receiver">
                 <div>
-                  <img src="chatTemplateExample2_files/cat.jpg">
+                  <img src="../images/${sendername}.png">
                 </div>
                 <div>
                   <div class="right_triangle"></div>
@@ -84,9 +170,7 @@
         }
         /* auto scroll to bottom */
         chatBody.scrollTop(chatBody[0].scrollHeight)
-        // messageBox.on('mouseover', function(){
-        //   $('.chat-footer').css("background-color", "white");
-        // })
+        
       });
     });
     const scale = window.screen.width / 750

@@ -1,5 +1,6 @@
 const Avatar = require('avatar-builder');
 const fs = require('fs');
+const path = require('path');
 const AVATAR_SIZE = 40;
 
 class User {
@@ -12,16 +13,7 @@ class User {
   //类中的方法
   generateAvatar(name){
     const catAvatar = Avatar.catBuilder(AVATAR_SIZE);
-    catAvatar.create(name).then(buffer => fs.writeFileSync(`../public/images/${name}.png`, buffer));
+    catAvatar.create(name).then(buffer => fs.writeFileSync(path.resolve(`./public/images/${name}.png`), buffer));
   }
-    
-  // get name() {
-  //   return this.name;
-  // }
-
-  // set name(name) {
-  //   this.name = name;
-  // }
 }
-
-let user = new User('tony2')
+module.exports = User
