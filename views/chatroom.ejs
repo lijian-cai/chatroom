@@ -64,6 +64,9 @@
       var username = `<%= user.name %>`;
       var chatBody = $('.all-member');
       var messageBox = $('#messagebox');
+      var to = 'all-member';
+      var allMember = to;
+      var listedUser = [username];
 
       var avatarPath = `../images/${username}.png`;
       $('.own-avatar').css('background', 'url(' + avatarPath + ')');
@@ -79,7 +82,6 @@
             console.log('error on search: '+err)
           },
           success: function(users){
-            console.log(users)
             $('.members-list').children().hide()
             $('#all-member').show()
             for(user of users.results){
@@ -89,16 +91,19 @@
         })
       })
 
+      socket.on('connect', function() {
+        socket.emit('join', username);
+      });
       $('form').submit(function(e){
         e.preventDefault(); // prevents page reloading
-        socket.emit('chat message', username, $('#messagebox').val());
+        socket.emit('chat message', {from: username, to: to}, $('#messagebox').val());
         $('#messagebox').val('');
         return false;
       });
-      socket.emit('initlist')
+      socket.emit('initlist', listedUser)
       socket.on('initlist', (connectedUsers) => {
         for(user of connectedUsers){
-          if(user.name !== username){
+          if(listedUser.indexOf(user.name) < 0){
             $('.members-list').append(
                `<li id='${user.name}'>
                   <div class="user-head avatar">
@@ -120,6 +125,7 @@
 
               </div>`.trim()
             )
+            listedUser.push(user.name)
           }
         }
       })
@@ -127,12 +133,13 @@
         $('.user-active').removeClass('user-active')
         $(this).addClass('user-active')
         let name = $(this).attr('id')
-        $(`.${name}`).show()
         let newChatBody = $(`.${name}`)
+        // newChatBody.show()
         chatBody.hide()
         chatBody = newChatBody
         chatBody.show()
         $('.chat-head span').text(name)
+        to = name;
       });
 
       // $('#messagebox').keypress(e => {
@@ -140,13 +147,14 @@
       //     $('#submit').focus().click();
       //   }
       // });
-      socket.on('chat message', function(sendername, msg){
-        if(sendername == username){
-          chatBody.append(
-             // right
+      socket.on('chat message', function(obj, msg){
+        if(obj.from == username){
+          let newChatBody = $(`.${obj.to}`)
+          newChatBody.append(
+             // append right side
              `<div class="sender">
                 <div>
-                  <img src="../images/${sendername}.png">
+                  <img src="../images/${obj.from}.png">
                 </div>
                 <div>
                   <div class="left_triangle"></div>
@@ -155,11 +163,12 @@
               </div>`.trim()
           )
         }else{
-          chatBody.append(
-            // left
+          let newChatBody = (obj.to == allMember) ? $(`.${obj.to}`) : $(`.${obj.from}`)
+          newChatBody.append(
+            // append left side
              `<div class="receiver">
                 <div>
-                  <img src="../images/${sendername}.png">
+                  <img src="../images/${obj.from}.png">
                 </div>
                 <div>
                   <div class="right_triangle"></div>
@@ -169,7 +178,9 @@
           )
         }
         /* auto scroll to bottom */
-        chatBody.scrollTop(chatBody[0].scrollHeight)
+        if($('.user-active').attr('id') == obj.to){
+          chatBody.scrollTop(chatBody[0].scrollHeight)
+        }
         
       });
     });

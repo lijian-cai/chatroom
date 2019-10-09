@@ -23,9 +23,19 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }))
 
 io.on('connection', (socket) => {
-  socket.on('chat message', (username, msg) => {
-    io.emit('chat message', username, msg);
+  socket.on('join', (room) => {
+    // room name is user name
+    socket.join(room);
+  })
+  socket.on('chat message', (obj, msg) => {
+    // socket.broadcast.to(room).emit('chat message', obj, msg);
+    if(obj.to != 'all-member'){
+      io.to(obj.from).to(obj.to).emit('chat message', obj, msg);
+    }else{
+      io.emit('chat message', obj, msg);
+    }
   });
+
   socket.on('initlist', () => {
     io.emit('initlist', connectedUsers)
   })
