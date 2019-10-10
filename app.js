@@ -5,6 +5,7 @@ const app     = express()
 // npm install --save socket.io
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const moment = require('moment')
 
 const User = require('./models/user.js');
 
@@ -29,10 +30,11 @@ io.on('connection', (socket) => {
   })
   socket.on('chat message', (obj, msg) => {
     // socket.broadcast.to(room).emit('chat message', obj, msg);
-    if(obj.to != 'all-member'){
-      io.to(obj.from).to(obj.to).emit('chat message', obj, msg);
+    let dt = moment().format('h:mm a')
+    if(obj.to != 'Group'){
+      io.to(obj.from).to(obj.to).emit('chat message', obj, msg, dt);
     }else{
-      io.emit('chat message', obj, msg);
+      io.emit('chat message', obj, msg, dt);
     }
   });
 
@@ -49,11 +51,12 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   let name = req.body.name
-  if(name){
+  let isToken = connectedUsers.map((user) => {return user.name == name}).includes(true)
+  if(name && !isToken){
     req.session.name = name
     res.redirect('/chatroom')
   }else{
-    res.redirect('/')
+    res.render('index', {error: 'nickname has been taken'})
   }
 })
 

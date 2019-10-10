@@ -41,6 +41,8 @@ img {
 .wechat-container{
   height: 680px;
   width: 860px;
+  min-height: 680px;
+  min-width: 860px;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 0 0 8px rgba(0,0,0,.1);
@@ -131,10 +133,26 @@ li{
   background: #DEDBDB;
 }
 
+.wrap{
+  position: relative;
+}
+
 .user-head{
   float: left;
   overflow: hidden;
   background: #999999;
+}
+
+.red-point{
+  display:block;
+  background: #E74C3C;
+  border-radius:50%;
+  width: 8px;
+  height: 8px;
+  top: -4px;
+  left: 36px;
+  position: absolute;
+  visibility: hidden;
 }
 
 .user-text{
@@ -245,6 +263,21 @@ p{
 .sender,
 .receiver{
   clear:both;
+}
+
+.sender p,
+.receiver p{
+  position: relative;
+  color: #797D7F;
+  font-size: 14px;
+}
+
+.sender p{
+  right: -390px;
+}
+
+.receiver p{
+  right: -15px;
 }
 
 .receiver div:nth-of-type(1){

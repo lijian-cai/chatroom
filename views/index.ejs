@@ -11,7 +11,11 @@
   <div class="container">
     <form action="/" method="post">
       <h1>What shall we call you?</h1>
-      <div class="div-space"></div>
+      <div class="div-space">
+        <% if(locals.error){ %>
+          <span class="error"><%= error %></span>
+        <% } %>
+      </div>
       <input type="text" name="name" id="name" maxlength="8" placeholder="your nickname, maximum length: 8..." required>
       <div class="div-space"></div>
       <button type="submit" id="submit">let's chat</button>

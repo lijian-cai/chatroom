@@ -19,20 +19,23 @@
         </div>
         <div class="members-list-container">
           <ul class="members-list">
-            <li class="user-active" id="all-member">
-              <div class="user-head avatar">
-                <img src="../all_members.jpg" alt="">
+            <li class="user-active" id="Group">
+              <div class="wrap">
+                <div class="red-point"></div>
+                <div class="user-head avatar">
+                  <img src="../all_members.jpg" alt="">
+                </div>
               </div>
               <div class="user-text">
                 <p class="user-name">
-                  All Members
+                  Group
                 </p>
                 <p class="user-message">
-                  dfadsadfsdfadfasfsafsadfasfdasdfadafadsfddddddddaaaaa
+                  
                 </p>
               </div>
               <div class="message-time">
-                2:54pm
+                
               </div>
             </li>
           </ul>
@@ -41,9 +44,9 @@
       
       <div class="chat-container">
         <div class="chat-head">
-          <span>All Members</span>
+          <span>Group</span>
         </div>
-        <div class="chat-body all-member">
+        <div class="chat-body Group">
 
         </div>
         <div class="chat-footer">
@@ -62,10 +65,10 @@
       var socket = io();
       var user = `<%= user %>`
       var username = `<%= user.name %>`;
-      var chatBody = $('.all-member');
+      var chatBody = $('.Group');
       var messageBox = $('#messagebox');
-      var to = 'all-member';
-      var allMember = to;
+      var to = 'Group';
+      var group = to;
       var listedUser = [username];
 
       var avatarPath = `../images/${username}.png`;
@@ -83,7 +86,7 @@
           },
           success: function(users){
             $('.members-list').children().hide()
-            $('#all-member').show()
+            $(`#${group}`).show()
             for(user of users.results){
               $(`#${user.name}`).show()
             }
@@ -106,8 +109,11 @@
           if(listedUser.indexOf(user.name) < 0){
             $('.members-list').append(
                `<li id='${user.name}'>
-                  <div class="user-head avatar">
-                    <img src="../images/${user.name}.png" alt="">
+                  <div class="wrap">                  
+                    <div class="red-point"></div>
+                    <div class="user-head avatar">
+                      <img src="../images/${user.name}.png" alt="">
+                    </div>
                   </div>
                   <div class="user-text">
                     <p class="user-name">
@@ -120,7 +126,7 @@
                   </div>
                 </li>`.trim()
             )
-            $('.all-member').after(
+            $(`.${group}`).after(
               `<div class="chat-body ${user.name}" style="display: none;">
 
               </div>`.trim()
@@ -132,6 +138,7 @@
       $(".members-list").on( "click", "li", function() {
         $('.user-active').removeClass('user-active')
         $(this).addClass('user-active')
+        $(this).find('.red-point').css('visibility', 'hidden');
         let name = $(this).attr('id')
         let newChatBody = $(`.${name}`)
         // newChatBody.show()
@@ -147,7 +154,8 @@
       //     $('#submit').focus().click();
       //   }
       // });
-      socket.on('chat message', function(obj, msg){
+      socket.on('chat message', function(obj, msg, dt){
+        console.log(obj)
         if(obj.from == username){
           let newChatBody = $(`.${obj.to}`)
           newChatBody.append(
@@ -156,6 +164,7 @@
                 <div>
                   <img src="../images/${obj.from}.png">
                 </div>
+                <p>${obj.from}</p>
                 <div>
                   <div class="left_triangle"></div>
                   <pre>${msg}</pre>
@@ -163,19 +172,26 @@
               </div>`.trim()
           )
         }else{
-          let newChatBody = (obj.to == allMember) ? $(`.${obj.to}`) : $(`.${obj.from}`)
+          let newChatBody = (obj.to == group) ? $(`.${obj.to}`) : $(`.${obj.from}`)
+          let userLi = (obj.to == group) ? $('.members-list').find(`#${group}`) : $('.members-list').find(`#${obj.from}`)
           newChatBody.append(
             // append left side
              `<div class="receiver">
                 <div>
                   <img src="../images/${obj.from}.png">
                 </div>
+                <p>${obj.from}</p>
                 <div>
                   <div class="right_triangle"></div>
                   <pre>${msg}</pre>
                 </div>
               </div>`.trim()
           )
+          if(!userLi.hasClass('user-active'))
+            userLi.find('.red-point').css('visibility', 'visible');          
+          userLi.find('.user-message').text(msg)
+          userLi.find('.message-time').text(dt)
+
         }
         /* auto scroll to bottom */
         if($('.user-active').attr('id') == obj.to){

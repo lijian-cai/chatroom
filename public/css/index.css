@@ -24,6 +24,16 @@ body{
   margin: 0 auto;
   height: 40px;
   width:  500px;
+  text-align: center;
+}
+
+.div-space span{
+  display: inline-block;
+  color: red;
+  text-align: center;
+  font-size: 12px;
+  margin: 0 auto;
+  line-height: 40px;
 }
 
 h1{
