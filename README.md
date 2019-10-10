@@ -1,9 +1,10 @@
 # chatroom
 
-This is Nodejs project to mock WeChat Web, 
+This is Nodejs project to mock WeChat Web
 
 ## Implemented Function
 - Login
+- Auto Generate Avatar
 - Group Chat
 - Private Chat
 - Search Member
@@ -13,3 +14,4 @@ This is Nodejs project to mock WeChat Web,
 - Express
 - Express-Session
 - Moment
+- Avatar Builder
