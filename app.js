@@ -28,6 +28,9 @@ io.on('connection', (socket) => {
     // room name is user name
     socket.join(room);
   })
+  socket.on('istyping', obj => {
+    io.to(obj.to).emit('istyping', obj)
+  })
   socket.on('chat message', (obj, msg) => {
     // socket.broadcast.to(room).emit('chat message', obj, msg);
     let dt = moment().format('h:mm a')

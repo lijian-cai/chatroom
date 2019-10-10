@@ -45,6 +45,9 @@
       <div class="chat-container">
         <div class="chat-head">
           <span>Group</span>
+          <div class="typing-wrap">
+            <p class="typing">Typing...</p>
+          </div>
         </div>
         <div class="chat-body Group">
 
@@ -97,6 +100,23 @@
       socket.on('connect', function() {
         socket.emit('join', username);
       });
+      $('#messagebox').on('keypress', function() {
+        socket.emit('istyping', {from: username, to: to, istyping: true})
+      })
+      $('#messagebox').on('keyup', function() {
+        setTimeout(()=>{
+          socket.emit('istyping', {from: username, to: to, istyping: false})
+        }, 800)
+      })
+      socket.on('istyping', (obj)=>{
+        if(obj.istyping){
+          let userLi = $('.members-list').find(`#${obj.from}`)
+          if(userLi.hasClass('user-active'))
+            $('.typing').css('visibility', 'visible');
+        }else{
+          $('.typing').css('visibility', 'hidden');
+        }
+      })
       $('form').submit(function(e){
         e.preventDefault(); // prevents page reloading
         socket.emit('chat message', {from: username, to: to}, $('#messagebox').val());
@@ -146,6 +166,7 @@
         chatBody = newChatBody
         chatBody.show()
         $('.chat-head span').text(name)
+        $('.typing').css('visibility', 'hidden');
         to = name;
       });
 
@@ -155,7 +176,6 @@
       //   }
       // });
       socket.on('chat message', function(obj, msg, dt){
-        console.log(obj)
         if(obj.from == username){
           let newChatBody = $(`.${obj.to}`)
           newChatBody.append(
@@ -191,7 +211,6 @@
             userLi.find('.red-point').css('visibility', 'visible');          
           userLi.find('.user-message').text(msg)
           userLi.find('.message-time').text(dt)
-
         }
         /* auto scroll to bottom */
         if($('.user-active').attr('id') == obj.to){
